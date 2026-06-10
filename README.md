@@ -1,1 +1,154 @@
 # agrinho2026
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz - Desmatamento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2e7d32;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h1 { color: #2e7d32; margin-bottom: 24px; }
+
+    .pergunta { font-size: 1.1rem; margin-bottom: 20px; color: #333; }
+
+    .botoes { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+
+    button {
+      padding: 12px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #btn-v { background: #4caf50; color: white; }
+    #btn-f { background: #f44336; color: white; }
+    #btn-v:hover { background: #388e3c; }
+    #btn-f:hover { background: #c62828; }
+
+    .feedback { font-weight: bold; min-height: 24px; margin-bottom: 16px; }
+    .certo { color: #2e7d32; }
+    .errado { color: #c62828; }
+
+    #btn-prox {
+      background: #2e7d32;
+      color: white;
+      display: none;
+      margin: 0 auto;
+    }
+
+    #resultado { display: none; }
+    #resultado h2 { color: #2e7d32; }
+
+    #btn-reiniciar {
+      background: #2e7d32;
+      color: white;
+      margin-top: 12px;
+    }
+
+    .contador { color: #888; margin-bottom: 12px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <div id="quiz">
+    <h1>🌿 Quiz: Desmatamento</h1>
+    <div class="contador" id="contador">Pergunta 1 de 6</div>
+    <div class="pergunta" id="pergunta"></div>
+    <div class="botoes">
+      <button id="btn-v" onclick="responder(true)">✅ Verdadeiro</button>
+      <button id="btn-f" onclick="responder(false)">❌ Falso</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button id="btn-prox" onclick="proxima()">Próxima →</button>
+  </div>
+
+  <div id="resultado">
+    <h1>🌿 Quiz: Desmatamento</h1>
+    <h2>Resultado</h2>
+    <p id="placar" style="font-size:1.3rem; margin:12px 0;"></p>
+    <p id="msg"></p>
+    <button id="btn-reiniciar" onclick="reiniciar()">🔄 Jogar novamente</button>
+  </div>
+
+</div>
+
+<script>
+  const perguntas = [
+    { texto: "O desmatamento libera CO₂ na atmosfera.", resposta: true },
+    { texto: "Florestas ajudam a absorver carbono da atmosfera.", resposta: true },
+    { texto: "Desmatar não tem nenhuma relação com o efeito estufa.", resposta: false },
+    { texto: "Plantar árvores ajuda a reduzir o carbono no ar.", resposta: true },
+    { texto: "A Amazônia não tem importância para o clima global.", resposta: false },
+    { texto: "Proteger florestas é uma forma de combater as mudanças climáticas.", resposta: true }
+  ];
+
+  let atual = 0, pontos = 0;
+
+  function mostrar() {
+    document.getElementById('contador').textContent = `Pergunta ${atual + 1} de ${perguntas.length}`;
+    document.getElementById('pergunta').textContent = perguntas[atual].texto;
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('btn-prox').style.display = 'none';
+    document.getElementById('btn-v').disabled = false;
+    document.getElementById('btn-f').disabled = false;
+  }
+
+  function responder(escolha) {
+    const certo = escolha === perguntas[atual].resposta;
+    if (certo) pontos++;
+
+    document.getElementById('btn-v').disabled = true;
+    document.getElementById('btn-f').disabled = true;
+
+    const fb = document.getElementById('feedback');
+    if (certo) { fb.textContent = '✅ Correto!'; fb.className = 'feedback certo'; }
+    else       { fb.textContent = '❌ Errado!';  fb.className = 'feedback errado'; }
+
+    document.getElementById('btn-prox').style.display = 'inline-block';
+    document.getElementById('btn-prox').textContent =
+      atual < perguntas.length - 1 ? 'Próxima →' : 'Ver resultado';
+  }
+
+  function proxima() {
+    atual++;
+    if (atual < perguntas.length) { mostrar(); }
+    else {
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('resultado').style.display = 'block';
+      document.getElementById('placar').textContent = `Você acertou ${pontos} de ${perguntas.length}!`;
+      const msgs = ['Tente novamente! 🌱', 'Tente novamente! 🌱', 'Continue aprendendo! 🌿', 'Bom trabalho! 🌿', 'Muito bem! 🌳', 'Parabéns, perfeito! 🌳'];
+      document.getElementById('msg').textContent = msgs[pontos];
+    }
+  }
+
+  function reiniciar() {
+    atual = 0; pontos = 0;
+    document.getElementById('resultado').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    mostrar();
+  }
+
+  mostrar();
+</script>
+</body>
+</html>
